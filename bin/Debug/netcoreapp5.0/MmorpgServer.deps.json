@@ -1,0 +1,57 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "MmorpgServer/1.0.0": {
+        "dependencies": {
+          "LiteNetLib": "0.9.2.2",
+          "OptimizedPriorityQueue": "4.2.0"
+        },
+        "runtime": {
+          "MmorpgServer.dll": {}
+        }
+      },
+      "LiteNetLib/0.9.2.2": {
+        "runtime": {
+          "lib/netcoreapp3.0/LiteNetLib.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OptimizedPriorityQueue/4.2.0": {
+        "runtime": {
+          "lib/netstandard1.0/Priority Queue.dll": {
+            "assemblyVersion": "4.2.0.0",
+            "fileVersion": "4.2.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MmorpgServer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LiteNetLib/0.9.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bZACTWHz5eMpulEnsu4YiEuxW4k3F8ACQn7eryrFEZtHcr3fVvAwaUFeNKM0Qeqwarg0yzaNOBLXs1L8FoQvMg==",
+      "path": "litenetlib/0.9.2.2",
+      "hashPath": "litenetlib.0.9.2.2.nupkg.sha512"
+    },
+    "OptimizedPriorityQueue/4.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/Sr/OfCFnff7zFe6HoDyWRU8pEvJbOCE9ZjFCSH0EcfETjgvZJ2kUoqlTgVR7cgTPexOGhNATdBKQigqbYn43w==",
+      "path": "optimizedpriorityqueue/4.2.0",
+      "hashPath": "optimizedpriorityqueue.4.2.0.nupkg.sha512"
+    }
+  }
+}
