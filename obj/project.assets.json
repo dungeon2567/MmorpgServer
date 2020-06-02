@@ -91,11 +91,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer\\MmorpgServer.csproj",
+      "projectUniqueName": "c:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer.csproj",
       "projectName": "MmorpgServer",
-      "projectPath": "C:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer\\MmorpgServer.csproj",
+      "projectPath": "c:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer.csproj",
       "packagesPath": "C:\\Users\\diego\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer\\obj\\",
+      "outputPath": "c:\\Users\\diego\\Desktop\\MmorpgServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\diego\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -106,7 +106,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://packages.stride3d.net/nuget": {}
       },
       "frameworks": {
         "netcoreapp5.0": {

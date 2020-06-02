@@ -14,3 +14,19 @@ C:\Users\diego\Desktop\MmorpgServer\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgS
 C:\Users\diego\Desktop\MmorpgServer\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.dll
 C:\Users\diego\Desktop\MmorpgServer\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.pdb
 C:\Users\diego\Desktop\MmorpgServer\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.genruntimeconfig.cache
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.exe
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.deps.json
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.runtimeconfig.json
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.runtimeconfig.dev.json
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.dll
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\MmorpgServer.pdb
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\LiteNetLib.dll
+C:\Users\diego\Desktop\MmorpgServer\bin\Debug\netcoreapp5.0\Priority Queue.dll
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.csprojAssemblyReference.cache
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.AssemblyInfoInputs.cache
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.AssemblyInfo.cs
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.csproj.CoreCompileInputs.cache
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.csproj.CopyComplete
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.dll
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.pdb
+C:\Users\diego\Desktop\MmorpgServer\obj\Debug\netcoreapp5.0\MmorpgServer.genruntimeconfig.cache

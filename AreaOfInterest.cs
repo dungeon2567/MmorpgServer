@@ -157,6 +157,7 @@ namespace MmorpgServer
 
         private void BoundingBoxChanged(in BoundingBox from, in BoundingBox to)
         {
+            if(World != null){
             for (Int32 x = to.From.X; x <= to.To.X; ++x)
                 for (Int32 y = to.From.Y; y <= to.To.Y; ++y)
                 {
@@ -194,6 +195,7 @@ namespace MmorpgServer
                         }
                     }
                 }
+            }
         }
 
         private void PositionChanged(in Vector2 from, in Vector2 to)

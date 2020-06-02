@@ -10,9 +10,6 @@ namespace MmorpgServer
     {
         static readonly Dictionary<NetPeer, PlayerController> Controllers = new Dictionary<NetPeer, PlayerController>();
 
-        HashSet<GameObject> HiddenObjects = new HashSet<GameObject>();
-        HashSet<GameObject> VisibleObjects = new HashSet<GameObject>();
-
         public static PlayerController GetFromPeer(NetPeer peer)
         {
             return Controllers[peer];
@@ -53,31 +50,6 @@ namespace MmorpgServer
         public void PlayerPositionChanged(GameObject player, in Vector2 from, in Vector2 to)
         {
             this.AreaOfInterest.Position = to;
-
-            foreach (GameObject hiddenObject in HiddenObjects.ToArray())
-            {
-                if (Player.CanSee(hiddenObject))
-                {
-                    HiddenObjects.Remove(hiddenObject);
-                    VisibleObjects.Add(hiddenObject);
-
-                    hiddenObject.SendEnterPacket(Peer);
-
-                    hiddenObject.AddEvents(this);
-                }
-            }
-
-            foreach (GameObject visibleObject in VisibleObjects.ToArray())
-            {
-                if (!Player.CanSee(visibleObject))
-                {
-                    VisibleObjects.Remove(visibleObject);
-                    HiddenObjects.Add(visibleObject);
-
-                    visibleObject.SendLeavePacket(Peer);
-                    visibleObject.RemoveEvents(this);
-                }
-            }
         }
 
         public void Stop()
@@ -118,24 +90,6 @@ namespace MmorpgServer
                 gameObject.AddEvents(this);
             }
             else
-            if (gameObject.HideOnFog)
-            {
-                if (Player.CanSee(gameObject))
-                {
-                    gameObject.SendEnterPacket(Peer);
-
-                    gameObject.AddEvents(this);
-
-                    VisibleObjects.Add(gameObject);
-                }
-                else
-                {
-                    HiddenObjects.Add(gameObject);
-                }
-
-                gameObject.PositionChanged += HideOnFogObjectPositionChanged;
-            }
-            else
             {
                 gameObject.SendEnterPacket(Peer);
 
@@ -143,67 +97,11 @@ namespace MmorpgServer
             }
         }
 
-        public void HideOnFogObjectPositionChanged(GameObject gameObject, in Vector2 from, in Vector2 to)
-        {
-            if (Player.CanSee(gameObject))
-            {
-                if (HiddenObjects.Remove(gameObject))
-                {
-                    VisibleObjects.Add(gameObject);
-
-                    gameObject.SendEnterPacket(Peer);
-
-                    gameObject.AddEvents(this);
-
-                    Console.WriteLine("Added " + Player.Id);
-                }
-            }
-            else
-            {
-                if (VisibleObjects.Remove(gameObject))
-                {
-                    HiddenObjects.Add(gameObject);
-
-                    gameObject.SendLeavePacket(Peer);
-
-                    gameObject.RemoveEvents(this);
-
-                    Console.WriteLine("Removed " + Player.Id);
-                }
-            }
-        }
-
         public void AreaOfInterestGameObjectRemoved(AreaOfInterest areaOfInterest, GameObject gameObject)
         {
-            if (gameObject.HideOnFog)
-            {
-                if (HiddenObjects.Remove(gameObject))
-                {
-                    gameObject.PositionChanged -= HideOnFogObjectPositionChanged;
+            gameObject.RemoveEvents(this);
 
-                    gameObject.RemoveEvents(this);
-                }
-                else
-                    if (VisibleObjects.Remove(gameObject))
-                {
-
-                    gameObject.PositionChanged -= HideOnFogObjectPositionChanged;
-
-                    gameObject.RemoveEvents(this);
-
-                    gameObject.SendLeavePacket(Peer);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            else
-            {
-                gameObject.RemoveEvents(this);
-
-                gameObject.SendLeavePacket(Peer);
-            }
+            gameObject.SendLeavePacket(Peer);
         }
 
 

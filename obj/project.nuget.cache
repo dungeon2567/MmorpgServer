@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QENSceplj6dQECcygeZ9JNFRO+OyuoHUx66p0IDlCq+bvUX7BLG7WPIKRo498Kmk9om2kM84TesXm2L3O8Aspw==",
+  "dgSpecHash": "RRrZsa6+UqJCtuqI/Wmgqw8dSL2JiZrTL/7wtZdpREr8VMVHHpHcqNaGG5snEN6Ljkwo3011cGr1BjglGx1xDA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer\\MmorpgServer.csproj",
+  "projectFilePath": "C:\\Users\\diego\\Desktop\\MmorpgServer\\MmorpgServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\diego\\.nuget\\packages\\litenetlib\\0.9.2.2\\litenetlib.0.9.2.2.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\optimizedpriorityqueue\\4.2.0\\optimizedpriorityqueue.4.2.0.nupkg.sha512"

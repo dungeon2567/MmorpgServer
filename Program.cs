@@ -21,13 +21,13 @@ namespace MmorpgServer
                 request.AcceptIfKey("SomeConnectionKey");
             };
 
-            World.Instance.Add(new Wall() { Position = new Vector2(4, 4) });
+            World.Instance.Add(new Pillar() { Position = new Vector2(-4, 8) });
 
             listener.PeerConnectedEvent += peer =>
             {
                 Creature player = new Creature()
                 {
-                    Position = new Vector2(0, 0)
+                    Position = new Vector2(-5, 10)
                 };
 
                 World.Instance.Add(player);
