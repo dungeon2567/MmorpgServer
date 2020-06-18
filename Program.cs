@@ -11,26 +11,28 @@ namespace MmorpgServer
         {
 
             EventBasedNetListener listener = new EventBasedNetListener();
-            NetManager server = new NetManager(listener);
+
+            NetManager server = new NetManager(listener){
+                ChannelsCount = 64
+            };
+            
             server.Start(8080);
 
-            World.Instance = new World();
+            Scene.Instance = Scene.Load("SampleScene.xml");
 
             listener.ConnectionRequestEvent += request =>
             {
                 request.AcceptIfKey("SomeConnectionKey");
             };
 
-            World.Instance.Add(new Pillar() { Position = new Vector2(-4, 8) });
-
             listener.PeerConnectedEvent += peer =>
             {
                 Creature player = new Creature()
                 {
-                    Position = new Vector2(-5, 10)
+                    Position = new Vector2(5, 5)
                 };
 
-                World.Instance.Add(player);
+                Scene.Instance.Add(player);
 
                 PlayerController ctrl = new PlayerController(player, peer);
 
@@ -75,11 +77,11 @@ namespace MmorpgServer
 
             while (true)
             {
-                World.Instance.CurrentTime = stopwatch.Elapsed;
+                Scene.Instance.CurrentTime = stopwatch.Elapsed;
 
                 server.PollEvents();
 
-                World.Instance.Update(1.0 / 30.0);
+                Scene.Instance.Update(1.0 / 30.0);
 
                 TimeSpan sleepTime = targetTime - stopwatch.Elapsed;
 

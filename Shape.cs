@@ -14,7 +14,32 @@ namespace MmorpgServer
             this.Rotation = 0;
         }
 
-        public virtual Vector2 GetPointOnDirection(in Vector2 direction){
+        public virtual Vector2 HalfSize
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        public virtual Double Radius
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        public virtual Vector2 GetPointOnDirection(in Vector2 direction)
+        {
             throw new NotImplementedException();
         }
 

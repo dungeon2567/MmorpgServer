@@ -1,6 +1,6 @@
 namespace MmorpgServer
 {
-    public class Pillar : GameObject
+    public class Pillar : Entity
     {
         public Pillar()
         {
@@ -8,5 +8,17 @@ namespace MmorpgServer
 
             Solid = true;
         } 
+
+        public double Radius
+        {
+            get
+            {
+                return CollisionShape.Radius;
+            }
+            set
+            {
+                CollisionShape.Radius = value;
+            }
+        }
     }
 }

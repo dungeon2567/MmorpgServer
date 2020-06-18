@@ -8,7 +8,11 @@ namespace MmorpgServer
         {
             this.Radius = radius;
         }
-        public readonly double Radius;
+
+        public override double Radius {
+            get;
+            set;
+        }
 
         public override Vector2 GetPointOnDirection(in Vector2 direction){
             return Position + (direction * Radius);

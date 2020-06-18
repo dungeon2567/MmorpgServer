@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MmorpgServer
 {
-    public class Projectile : GameObject, Updatable, Integrable
+    public class Projectile : Entity, Updatable, Integrable
     {
         Vector2 Velocity;
 
-        public GameObject Owner;
+        public Entity Owner;
 
         private TimeSpan CreatedAt;
 
@@ -95,7 +95,7 @@ namespace MmorpgServer
 
             CollisionResult result;
 
-            World.ResolveCollision(this, gameObject => gameObject == Owner, out result);
+            World.ResolveCollision(this, entity => entity == Owner, out result);
 
             if (result.Penetration > 0)
             {

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEntity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entity xsi:type="Wall">
+    <Position>
+      <X>-3.08</X>
+      <Y>10</Y>
+    </Position>
+    <HalfSize>
+      <X>0.3723278</X>
+      <Y>0.37130928</Y>
+    </HalfSize>
+  </Entity>
+  <Entity xsi:type="Wall">
+    <Position>
+      <X>-0.5</X>
+      <Y>18.71</Y>
+    </Position>
+    <HalfSize>
+      <X>0.3723278</X>
+      <Y>0.37130928</Y>
+    </HalfSize>
+  </Entity>
+  <Entity xsi:type="Wall">
+    <Position>
+      <X>-8</X>
+      <Y>17.72</Y>
+    </Position>
+    <HalfSize>
+      <X>0.3723278</X>
+      <Y>0.37130928</Y>
+    </HalfSize>
+  </Entity>
+  <Entity xsi:type="Wall">
+    <Position>
+      <X>-8</X>
+      <Y>10</Y>
+    </Position>
+    <HalfSize>
+      <X>0.3723278</X>
+      <Y>0.37130928</Y>
+    </HalfSize>
+  </Entity>
+  <Entity xsi:type="Pillar">
+    <Position>
+      <X>12.34</X>
+      <Y>15.0527649</Y>
+    </Position>
+    <Radius>0.9112854</Radius>
+  </Entity>
+</ArrayOfEntity>

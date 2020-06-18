@@ -1,6 +1,9 @@
+using System.Xml.Serialization;
 using System;
+using System.Xml;
 namespace MmorpgServer
 {
+    [Serializable]
     public struct Vector2
     {
         public static readonly Vector2 Deg90 = new Vector2(0, 1);
@@ -15,7 +18,7 @@ namespace MmorpgServer
             this.Y = Y;
         }
 
-
+        [XmlIgnore]
         public double Length
         {
             get
@@ -34,6 +37,7 @@ namespace MmorpgServer
             Y = Y / length;
         }
 
+        [XmlIgnore]
         public double SqrLength
         {
             get

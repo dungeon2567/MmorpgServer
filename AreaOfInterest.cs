@@ -18,14 +18,14 @@ namespace MmorpgServer
             }
         }
 
-        readonly Dictionary<GameObject, Int32> ReferenceManager = new Dictionary<GameObject, Int32>();
+        readonly Dictionary<Entity, Int32> ReferenceManager = new Dictionary<Entity, Int32>();
 
-        public IEnumerable<GameObject> Objects
+        public IEnumerable<Entity> Objects
         {
             get { return ReferenceManager.Keys; }
         }
 
-        public World World
+        public Scene World
         {
             get;
             set;
@@ -85,9 +85,9 @@ namespace MmorpgServer
                     cluster.GameObjectAdded += this.ClusterGameObjectAdded;
                     cluster.GameObjectRemoved += this.ClusterGameObjectRemoved;
 
-                    foreach (GameObject gameObject in cluster)
+                    foreach (Entity entity in cluster)
                     {
-                        this.ClusterGameObjectAdded(cluster, gameObject);
+                        this.ClusterGameObjectAdded(cluster, entity);
                     }
                 }
         }
@@ -108,44 +108,44 @@ namespace MmorpgServer
                     cluster.GameObjectAdded -= this.ClusterGameObjectAdded;
                     cluster.GameObjectRemoved -= this.ClusterGameObjectRemoved;
 
-                    foreach (GameObject gameObject in cluster)
+                    foreach (Entity entity in cluster)
                     {
-                        this.ClusterGameObjectRemoved(cluster, gameObject);
+                        this.ClusterGameObjectRemoved(cluster, entity);
                     }
                 }
         }
 
-        private void ClusterGameObjectAdded(Cluster cluster, GameObject gameObject)
+        private void ClusterGameObjectAdded(Cluster cluster, Entity entity)
         {
             int referenceCount;
 
-            if (ReferenceManager.TryGetValue(gameObject, out referenceCount))
+            if (ReferenceManager.TryGetValue(entity, out referenceCount))
             {
-                ReferenceManager[gameObject] = referenceCount + 1;
+                ReferenceManager[entity] = referenceCount + 1;
             }
             else
             {
-                ReferenceManager.Add(gameObject, 1);
+                ReferenceManager.Add(entity, 1);
 
-                this.GameObjectAdded?.Invoke(this, gameObject);
+                this.GameObjectAdded?.Invoke(this, entity);
             }
         }
 
-        private void ClusterGameObjectRemoved(Cluster cluster, GameObject gameObject)
+        private void ClusterGameObjectRemoved(Cluster cluster, Entity entity)
         {
             int referenceCount;
 
-            if (ReferenceManager.TryGetValue(gameObject, out referenceCount))
+            if (ReferenceManager.TryGetValue(entity, out referenceCount))
             {
                 if (referenceCount == 1)
                 {
-                    ReferenceManager.Remove(gameObject);
+                    ReferenceManager.Remove(entity);
 
-                    this.GameObjectRemoved?.Invoke(this, gameObject);
+                    this.GameObjectRemoved?.Invoke(this, entity);
                 }
                 else
                 {
-                    ReferenceManager[gameObject] = referenceCount - 1;
+                    ReferenceManager[entity] = referenceCount - 1;
                 }
             }
         }
@@ -170,9 +170,9 @@ namespace MmorpgServer
                         cluster.GameObjectAdded += this.ClusterGameObjectAdded;
                         cluster.GameObjectRemoved += this.ClusterGameObjectRemoved;
 
-                        foreach (GameObject gameObject in cluster)
+                        foreach (Entity entity in cluster)
                         {
-                            this.ClusterGameObjectAdded(cluster, gameObject);
+                            this.ClusterGameObjectAdded(cluster, entity);
                         }
                     }
                 }
@@ -189,9 +189,9 @@ namespace MmorpgServer
                         cluster.GameObjectAdded -= this.ClusterGameObjectAdded;
                         cluster.GameObjectRemoved -= this.ClusterGameObjectRemoved;
 
-                        foreach (GameObject gameObject in cluster)
+                        foreach (Entity entity in cluster)
                         {
-                            this.ClusterGameObjectRemoved(cluster, gameObject);
+                            this.ClusterGameObjectRemoved(cluster, entity);
                         }
                     }
                 }
@@ -218,8 +218,8 @@ namespace MmorpgServer
             }
         }
 
-        public delegate void GameObjectAddedHandler(AreaOfInterest areaOfInterest, GameObject gameObject);
-        public delegate void GameObjectRemovedHandler(AreaOfInterest areaOfInterest, GameObject gameObject);
+        public delegate void GameObjectAddedHandler(AreaOfInterest areaOfInterest, Entity entity);
+        public delegate void GameObjectRemovedHandler(AreaOfInterest areaOfInterest, Entity entity);
 
         public event GameObjectAddedHandler GameObjectAdded;
         public event GameObjectRemovedHandler GameObjectRemoved;

@@ -6,12 +6,33 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Priority_Queue;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace MmorpgServer
 {
-    public class World : TaskScheduler
+    public class Scene : TaskScheduler
     {
-        public static World Instance;
+        public static Scene Instance;
+
+        public static Scene Load(string path)
+        {
+            Scene scene = new Scene();
+
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Entity>));
+
+            List<Entity> entities = serializer.Deserialize(stream) as List<Entity>;
+
+            foreach(var entity in entities){
+                scene.Add(entity);
+            }
+
+            stream.Close();
+
+            return scene;
+        }
 
         private Int32 LastId = 0;
 
@@ -94,26 +115,25 @@ namespace MmorpgServer
             return tqn.Task;
         }
 
-        public World()
+        public Scene()
         {
             BoundThread = Thread.CurrentThread;
 
             TaskFactory = new TaskFactory(
                 CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                 TaskContinuationOptions.None, this);
-
         }
 
-        public void Add(GameObject gameObject)
+        public void Add(Entity entity)
         {
-            gameObject.World = this;
-            gameObject.Id = ++LastId;
+            entity.World = this;
+            entity.Id = ++LastId;
 
-            gameObject.Initialize();
+            entity.Initialize();
 
-            BoundingBox clusters = gameObject.BoundingBox;
+            BoundingBox clusters = entity.BoundingBox;
 
-            gameObject.BoundingBoxChanged += this.GameObjectBoundingBoxChanged;
+            entity.BoundingBoxChanged += this.GameObjectBoundingBoxChanged;
 
             for (Int32 x = clusters.From.X; x <= clusters.To.X; ++x)
                 for (Int32 y = clusters.From.Y; y <= clusters.To.Y; ++y)
@@ -122,11 +142,11 @@ namespace MmorpgServer
 
                     Cluster cluster = GetCluster(position);
 
-                    cluster.Enter(gameObject);
+                    cluster.Enter(entity);
                 }
         }
 
-        public GameObject Raycast(in Vector2 from, in Vector2 to, Predicate<GameObject> filter)
+        public Entity Raycast(in Vector2 from, in Vector2 to, Predicate<Entity> filter)
         {
             int x0 = (int)(from.X <= to.X ? Math.Floor(from.X / 3) : Math.Ceiling(from.X / 3));
             int y0 = (int)(from.Y <= to.Y ? Math.Floor(from.Y / 3) : Math.Ceiling(from.Y / 3));
@@ -146,7 +166,7 @@ namespace MmorpgServer
 
             double min = Double.PositiveInfinity;
 
-            GameObject target = null;
+            Entity target = null;
 
             Vector2 direction = (to - from);
 
@@ -158,16 +178,16 @@ namespace MmorpgServer
             {
                 Cluster cluster = GetCluster(new Vector2i(x, y));
 
-                foreach (GameObject gameObject in cluster)
+                foreach (Entity entity in cluster)
                 {
-                    if (filter(gameObject))
+                    if (filter(entity))
                     {
-                        double rayDistance = gameObject.CollisionShape.Raycast(ray);
+                        double rayDistance = entity.CollisionShape.Raycast(ray);
 
                         if (rayDistance < min)
                         {
                             min = rayDistance;
-                            target = gameObject;
+                            target = entity;
                         }
                     }
                 }
@@ -192,7 +212,7 @@ namespace MmorpgServer
             return target;
         }
 
-        private void GameObjectBoundingBoxChanged(GameObject gameObject, in BoundingBox from, in BoundingBox to)
+        private void GameObjectBoundingBoxChanged(Entity entity, in BoundingBox from, in BoundingBox to)
         {
             for (Int32 x = to.From.X; x <= to.To.X; ++x)
                 for (Int32 y = to.From.Y; y <= to.To.Y; ++y)
@@ -203,7 +223,7 @@ namespace MmorpgServer
                     {
                         Cluster cluster = GetCluster(position);
 
-                        cluster.Enter(gameObject);
+                        cluster.Enter(entity);
                     }
                 }
 
@@ -216,16 +236,16 @@ namespace MmorpgServer
                     {
                         Cluster cluster = GetCluster(position);
 
-                        cluster.Leave(gameObject);
+                        cluster.Leave(entity);
                     }
                 }
         }
 
-        public void Remove(GameObject gameObject)
+        public void Remove(Entity entity)
         {
             TaskFactory.StartNew(() =>
             {
-                BoundingBox clusters = gameObject.BoundingBox;
+                BoundingBox clusters = entity.BoundingBox;
 
                 for (Int32 x = clusters.From.X; x <= clusters.To.X; ++x)
                     for (Int32 y = clusters.From.Y; y <= clusters.To.Y; ++y)
@@ -234,13 +254,13 @@ namespace MmorpgServer
 
                         Cluster cluster = GetCluster(position);
 
-                        cluster.Leave(gameObject);
+                        cluster.Leave(entity);
                     }
 
-                gameObject.Destroy();
+                entity.Destroy();
 
-                gameObject.World = null;
-                gameObject.Id = 0;
+                entity.World = null;
+                entity.Id = 0;
             });
         }
 
@@ -278,7 +298,7 @@ namespace MmorpgServer
             }
         }
 
-        public void ResolveCollision(GameObject self, out CollisionResult result)
+        public void ResolveCollision(Entity self, out CollisionResult result)
         {
             result = new CollisionResult(0, Vector2.Zero);
 
@@ -291,13 +311,13 @@ namespace MmorpgServer
 
                     Cluster cluster = GetCluster(position);
 
-                    foreach (GameObject gameObject in cluster)
+                    foreach (Entity entity in cluster)
                     {
-                        if (gameObject != self)
+                        if (entity != self)
                         {
                             CollisionResult gameObjectCollisionResult;
 
-                            self.CollisionShape.ResolveCollision(gameObject.CollisionShape, out gameObjectCollisionResult);
+                            self.CollisionShape.ResolveCollision(entity.CollisionShape, out gameObjectCollisionResult);
 
                             if (gameObjectCollisionResult.Penetration > 0)
                             {
@@ -308,7 +328,7 @@ namespace MmorpgServer
                 }
         }
 
-        public void ResolveCollision(GameObject self, Predicate<GameObject> predicate, out CollisionResult result)
+        public void ResolveCollision(Entity self, Predicate<Entity> predicate, out CollisionResult result)
         {
             result = new CollisionResult(0, Vector2.Zero);
 
@@ -321,13 +341,13 @@ namespace MmorpgServer
 
                     Cluster cluster = GetCluster(position);
 
-                    foreach (GameObject gameObject in cluster)
+                    foreach (Entity entity in cluster)
                     {
-                        if (gameObject != self && gameObject.Solid && !predicate(gameObject))
+                        if (entity != self && entity.Solid && !predicate(entity))
                         {
                             CollisionResult gameObjectCollisionResult;
 
-                            self.CollisionShape.ResolveCollision(gameObject.CollisionShape, out gameObjectCollisionResult);
+                            self.CollisionShape.ResolveCollision(entity.CollisionShape, out gameObjectCollisionResult);
 
                             if (gameObjectCollisionResult.Penetration > 0)
                             {

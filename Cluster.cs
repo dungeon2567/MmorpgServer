@@ -4,29 +4,29 @@ using System.Collections.Generic;
 
 namespace MmorpgServer
 {
-    public class Cluster : HashSet<GameObject>
+    public class Cluster : HashSet<Entity>
     {
         public readonly Vector2i Position;
 
-        public delegate void GameObjectAddedHandler(Cluster cluster, GameObject gameObject);
-        public delegate void GameObjectRemovedHandler(Cluster cluster, GameObject gameObject);
+        public delegate void GameObjectAddedHandler(Cluster cluster, Entity entity);
+        public delegate void GameObjectRemovedHandler(Cluster cluster, Entity entity);
 
         public event GameObjectAddedHandler GameObjectAdded;
         public event GameObjectRemovedHandler GameObjectRemoved;
 
-        public void Enter(GameObject gameObject)
+        public void Enter(Entity entity)
         {
-            if (base.Add(gameObject))
+            if (base.Add(entity))
             {
-                GameObjectAdded?.Invoke(this, gameObject);
+                GameObjectAdded?.Invoke(this, entity);
             }
         }
 
-        public void Leave(GameObject gameObject)
+        public void Leave(Entity entity)
         {
-            if (base.Remove(gameObject))
+            if (base.Remove(entity))
             {
-                GameObjectRemoved?.Invoke(this, gameObject);
+                GameObjectRemoved?.Invoke(this, entity);
             }
         }
 

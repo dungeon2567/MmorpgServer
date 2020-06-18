@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MmorpgServer
 {
-    public class Creature : GameObject, Updatable, Integrable
+    public class Creature : Entity, Updatable, Integrable
     {
         Vector2 Velocity;
 
@@ -186,50 +186,22 @@ namespace MmorpgServer
         {
             if (canAttack)
             {
-                canWalk = false;
-
                 canAttack = false;
 
                 try
                 {
 
-                    Task canAttackDelay = World.Delay(TimeSpan.FromSeconds(0.7));
-
-                    Task registerDamageDelay = World.Delay(TimeSpan.FromSeconds(0.35));
-
-                    Task canWalkDelay = World.Delay(TimeSpan.FromSeconds(0.5));
+                    Task canAttackDelay = World.Delay(TimeSpan.FromSeconds(1));
 
                     StartedAttacking?.Invoke(this);
 
-                    await registerDamageDelay;
-
-                    /*
-
-                    await createArrowDelay;
-
-                    Projectile p = new Projectile()
-                    {
-                        Position = new Vector2(Position.X + Math.Cos(CollisionShape.Rotation) * 1.2, Position.Y - Math.Sin(CollisionShape.Rotation) * 1.2),
-                        Owner = this
-                    };
-
-                    p.CollisionShape.Rotation = CollisionShape.Rotation;
-
-                    World.Add(p);
-
-                    */
-
-                    await canWalkDelay;
-
-                    canWalk = true;
+                    await canAttackDelay;
 
                     StoppedAttacking?.Invoke(this);
-
-                    await canAttackDelay;
                 }
                 finally
                 {
-                    canWalk = true;
+
                     canAttack = true;
                 }
             }

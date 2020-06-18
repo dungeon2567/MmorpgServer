@@ -6,7 +6,7 @@ using System;
 
 namespace MmorpgServer
 {
-    public class PlayerController
+    public class PlayerController: Updatable
     {
         static readonly Dictionary<NetPeer, PlayerController> Controllers = new Dictionary<NetPeer, PlayerController>();
 
@@ -18,6 +18,8 @@ namespace MmorpgServer
         public readonly AreaOfInterest AreaOfInterest;
 
         public readonly NetPeer Peer;
+
+        bool AttackPressed = false;
 
         public PlayerController(Creature player, NetPeer peer)
         {
@@ -36,18 +38,26 @@ namespace MmorpgServer
 
             AreaOfInterest.Start();
 
-            foreach (GameObject gameObject in AreaOfInterest.Objects)
+            foreach (Entity entity in AreaOfInterest.Objects)
             {
-                AreaOfInterestGameObjectAdded(AreaOfInterest, gameObject);
+                AreaOfInterestGameObjectAdded(AreaOfInterest, entity);
             }
 
             AreaOfInterest.GameObjectAdded += AreaOfInterestGameObjectAdded;
             AreaOfInterest.GameObjectRemoved += AreaOfInterestGameObjectRemoved;
 
             Player.PositionChanged += PlayerPositionChanged;
+
+            this.Player.World.Updateables.Add(this);
         }
 
-        public void PlayerPositionChanged(GameObject player, in Vector2 from, in Vector2 to)
+        public void Update(double deltaTime){
+            if(this.AttackPressed){
+                this.Player.Attack();
+            }
+        }
+
+        public void PlayerPositionChanged(Entity player, in Vector2 from, in Vector2 to)
         {
             this.AreaOfInterest.Position = to;
         }
@@ -56,16 +66,16 @@ namespace MmorpgServer
         {
             Console.WriteLine(Player.Id + " Disconnected ");
 
-            World.Instance.Remove(Player);
+            Scene.Instance.Remove(Player);
 
             Controllers.Remove(Peer);
 
             AreaOfInterest.GameObjectAdded -= AreaOfInterestGameObjectAdded;
             AreaOfInterest.GameObjectRemoved -= AreaOfInterestGameObjectRemoved;
 
-            foreach (GameObject gameObject in AreaOfInterest.Objects)
+            foreach (Entity entity in AreaOfInterest.Objects)
             {
-                gameObject.RemoveEvents(this);
+                entity.RemoveEvents(this);
             }
 
             AreaOfInterest.Stop();
@@ -73,9 +83,9 @@ namespace MmorpgServer
             Player.PositionChanged -= PlayerPositionChanged;
         }
 
-        public void AreaOfInterestGameObjectAdded(AreaOfInterest areaOfInterest, GameObject gameObject)
+        public void AreaOfInterestGameObjectAdded(AreaOfInterest areaOfInterest, Entity entity)
         {
-            if (gameObject == Player)
+            if (entity == Player)
             {
                 NetDataWriter writer = new NetDataWriter();
 
@@ -87,21 +97,21 @@ namespace MmorpgServer
 
                 Peer.Send(writer, DeliveryMethod.ReliableOrdered);
 
-                gameObject.AddEvents(this);
+                entity.AddEvents(this);
             }
             else
             {
-                gameObject.SendEnterPacket(Peer);
+                entity.SendEnterPacket(Peer);
 
-                gameObject.AddEvents(this);
+                entity.AddEvents(this);
             }
         }
 
-        public void AreaOfInterestGameObjectRemoved(AreaOfInterest areaOfInterest, GameObject gameObject)
+        public void AreaOfInterestGameObjectRemoved(AreaOfInterest areaOfInterest, Entity entity)
         {
-            gameObject.RemoveEvents(this);
+            entity.RemoveEvents(this);
 
-            gameObject.SendLeavePacket(Peer);
+            entity.SendLeavePacket(Peer);
         }
 
 
@@ -111,12 +121,12 @@ namespace MmorpgServer
 
             packetWriter.Put((byte)2);
             packetWriter.Put((Int32)creature.Id);
-            packetWriter.Put((float)from.X);
-            packetWriter.Put((float)from.Y);
+            //packetWriter.Put((float)from.X);
+            //packetWriter.Put((float)from.Y);
 
             packetWriter.Put((float)to.X);
             packetWriter.Put((float)to.Y);
-
+            
             Peer.Send(packetWriter, DeliveryMethod.Sequenced);
         }
 
@@ -137,8 +147,6 @@ namespace MmorpgServer
 
             packetWriter.Put((byte)2);
             packetWriter.Put((Int32)projectile.Id);
-            packetWriter.Put((float)from.X);
-            packetWriter.Put((float)from.Y);
 
             packetWriter.Put((float)to.X);
             packetWriter.Put((float)to.Y);
@@ -202,8 +210,7 @@ namespace MmorpgServer
                     break;
                 case 3:
                     {
-
-                        Player.Attack();
+                       this.AttackPressed = packet.GetBool();
                     }
                     break;
 

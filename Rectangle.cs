@@ -3,7 +3,11 @@ namespace MmorpgServer
 {
     public class Rectangle : Shape
     {
-        public Vector2 HalfSize;
+        public override Vector2 HalfSize
+        {
+            get;
+            set;
+        }
         public Rectangle(in Vector2 position, in Vector2 halfSize) : base(in position)
         {
             this.HalfSize = halfSize;

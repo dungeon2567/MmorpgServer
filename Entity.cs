@@ -1,23 +1,31 @@
 using LiteNetLib;
 using System;
 using LiteNetLib.Utils;
+using System.Xml.Serialization;
 
 namespace MmorpgServer
 {
-    public class GameObject
+    [Serializable]
+    [XmlInclude(typeof(Wall))]
+    [XmlInclude(typeof(Pillar))]
+    public class Entity
     {
-
+        [XmlIgnore]
         public Int32 Id;
 
+        [XmlIgnore]
         public Shape CollisionShape;
 
-        public World World;
+        [XmlIgnore]
+        public Scene World;
 
         private BoundingBox bounds;
-
         private bool solid;
+
+        [XmlIgnore]
         private bool visible;
 
+        [XmlIgnore]
         public ref readonly BoundingBox BoundingBox
         {
             get
@@ -26,7 +34,7 @@ namespace MmorpgServer
             }
         }
 
-        public bool CanSee(GameObject other)
+        public bool CanSee(Entity other)
         {
             var direction = other.CollisionShape.Position - Position;
 
@@ -37,7 +45,7 @@ namespace MmorpgServer
             var p1 = CollisionShape.GetPointOnDirection(dir);
             var p2 = other.CollisionShape.GetPointOnDirection(dir);
 
-            GameObject raycastResult = World.Raycast(p1, p2, gameObject => gameObject != this);
+            Entity raycastResult = World.Raycast(p1, p2, entity => entity != this);
 
             if (raycastResult == null || raycastResult == other)
             {
@@ -49,7 +57,7 @@ namespace MmorpgServer
             p1 = CollisionShape.GetPointOnDirection(dir);
             p2 = other.CollisionShape.GetPointOnDirection(dir);
 
-            raycastResult = World.Raycast(p1, p2, gameObject => gameObject != this);
+            raycastResult = World.Raycast(p1, p2, entity => entity != this);
 
             if (raycastResult == null || raycastResult == other)
             {
@@ -64,11 +72,12 @@ namespace MmorpgServer
             get { return false; }
         }
 
-        public GameObject()
+        public Entity()
         {
             Visible = true;
         }
 
+        [XmlIgnore]
         public bool Solid
         {
             get { return solid; }
@@ -85,6 +94,7 @@ namespace MmorpgServer
             }
         }
 
+        [XmlIgnore]
         public bool Visible
         {
             get { return visible; }
@@ -114,12 +124,12 @@ namespace MmorpgServer
                 BoundingBoxChanged?.Invoke(this, from, value);
             }
         }
-        public delegate void PositionChangedHandler(GameObject gameObject, in Vector2 from, in Vector2 to);
+        public delegate void PositionChangedHandler(Entity entity, in Vector2 from, in Vector2 to);
 
-        public delegate void BoundingBoxChangedHandler(GameObject gameObject, in BoundingBox from, in BoundingBox to);
+        public delegate void BoundingBoxChangedHandler(Entity entity, in BoundingBox from, in BoundingBox to);
 
-        public event PropertyChangedHandler<GameObject, bool> VisibleChanged;
-        public event PropertyChangedHandler<GameObject, bool> SolidChanged;
+        public event PropertyChangedHandler<Entity, bool> VisibleChanged;
+        public event PropertyChangedHandler<Entity, bool> SolidChanged;
 
         public event PositionChangedHandler PositionChanged;
         public event BoundingBoxChangedHandler BoundingBoxChanged;
@@ -136,6 +146,7 @@ namespace MmorpgServer
             bounds = CollisionShape.GetClusters();
         }
 
+        [XmlIgnore]
         public bool IsDestroyed
         {
             get { return Id == 0; }
@@ -171,6 +182,7 @@ namespace MmorpgServer
 
         }
 
+        [XmlElement("Position")]
         public Vector2 Position
         {
             get
